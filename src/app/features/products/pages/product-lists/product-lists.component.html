@@ -1,6 +1,14 @@
 <div class="container">
   <h2>Products</h2>
 
+  <div class="categories">
+  <button
+    *ngFor="let cat of categories"
+    (click)="filterByCategory(cat)"
+    [class.active]="selectedCategory === cat">
+    {{ cat }}
+  </button>
+</div>
   <!-- Categories Filter -->
   <div class="filter">
     <label>Filter by category:</label>
