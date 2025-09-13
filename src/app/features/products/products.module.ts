@@ -4,8 +4,10 @@ import { CommonModule } from '@angular/common';
 import { ProductsRoutingModule } from './products-routing.module';
 import { ProductsComponent } from './products.component';
 import { ProductListsComponent } from './pages/product-lists/product-lists.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
+import { StoreModule } from '@ngrx/store';
+import { productsFeatureKey, productsReducer } from './state/products.reducer';
 
 
 @NgModule({
@@ -17,10 +19,12 @@ import { ProductDetailsComponent } from './pages/product-details/product-details
   imports: [
     CommonModule,
     FormsModule,
-    ProductsRoutingModule
+    ProductsRoutingModule,
+    ReactiveFormsModule,
+    StoreModule.forFeature(productsFeatureKey, productsReducer),
   ],
   exports: [
-    ProductListsComponent 
+    ProductListsComponent
   ]
 })
 export class ProductsModule { }

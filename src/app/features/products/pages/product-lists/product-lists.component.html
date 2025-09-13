@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container" style="display: none;">
   <h2>Products</h2>
 
   <div class="categories">
@@ -9,7 +9,6 @@
     {{ cat }}
   </button>
 </div>
-  <!-- Categories Filter -->
   <div class="filter">
     <label>Filter by category:</label>
     <select [(ngModel)]="selectedCategory" (change)="filterByCategory(selectedCategory)">
@@ -17,18 +16,68 @@
     </select>
   </div>
 
-  <!-- Loading -->
   <div *ngIf="loading">Loading products...</div>
 
-  <!-- Error -->
   <div *ngIf="error" class="error">{{ error }}</div>
 
-  <!-- Grid -->
   <div class="grid">
     <div class="card" *ngFor="let product of filteredProducts; ">
       <img [src]="product.image" alt="{{ product.title }}" />
       <h3>{{ product.title }}</h3>
       <p>{{ product.price | currency }}</p>
     </div>
+  </div>
+</div> -->
+
+<!--
+<div class="categories">
+  <button
+    *ngFor="let cat of (categories$ | async)"
+    (click)="onCategorySelect(cat)"
+    [class.active]="(selectedCategory$ | async) === cat">
+    {{ cat }}
+  </button>
+</div>
+
+<div class="grid">
+  <div class="card" *ngFor="let product of (products$ | async)">
+    <img [src]="product.image" alt="{{ product.title }}" />
+    <h3>{{ product.title }}</h3>
+    <p>{{ product.price | currency }}</p>
+  </div>
+</div> -->
+
+
+<div class="filters" [formGroup]="filtersForm">
+  <input type="text" formControlName="searchTerm" placeholder="Search products..." />
+
+  <input type="number" formControlName="min" placeholder="Min price" />
+  <input type="number" formControlName="max" placeholder="Max price" />
+</div>
+
+<div class="categories">
+  <button
+    *ngFor="let cat of (categories$ | async)"
+    (click)="onCategorySelect(cat)"
+    [class.active]="(selectedCategory$ | async) === cat">
+    {{ cat }}
+  </button>
+</div>
+
+
+
+<div *ngIf="loading$ | async" class="loading">
+  Loading products...
+</div>
+
+<div *ngIf="error$ | async as error" class="error">
+  {{ error }}
+</div>
+
+<div class="grid" *ngIf="!(loading$ | async)">
+  <div class="card" *ngFor="let product of (products$ | async)">
+    <img [src]="product.image" alt="{{ product.title }}" />
+    <h3>{{ product.title }}</h3>
+    <p>{{ product.price | currency }}</p>
   </div>
 </div>

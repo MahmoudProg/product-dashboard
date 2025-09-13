@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { Product } from 'src/app/core/models/Product ';
-import { ProductService } from 'src/app/core/services/product.service';
+import { selectCategories, selectError, selectFilteredProducts, selectLoading, selectSelectedCategory } from '../../state/products.selectors';
+import * as ProductsActions from '../../state/products.actions';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-product-lists',
@@ -11,58 +15,51 @@ import { ProductService } from 'src/app/core/services/product.service';
 })
 export class ProductListsComponent {
 
-  products: Product[] = [];
-  categories: string[] = [];
-  filteredProducts: Product[] = [];
-  selectedCategory: string = 'all';
-  loading = true;
-  error: string | null = null;
-  // trackById :number = 0
 
-  constructor(private productService: ProductService) {}
+  products$: Observable<Product[]>;
+  categories$: Observable<string[]>;
+  selectedCategory$: Observable<string>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
+
+  filtersForm: FormGroup;
+  constructor(private store: Store , private fb: FormBuilder) {
+    this.products$ = this.store.select(selectFilteredProducts);
+    this.categories$ = this.store.select(selectCategories);
+    this.selectedCategory$ = this.store.select(selectSelectedCategory);
+
+    this.loading$ = this.store.select(selectLoading);
+    this.error$ = this.store.select(selectError);
+
+    this.filtersForm = this.fb.group({
+      searchTerm: [''],
+      min: [0],
+      max: [Infinity]
+    });
+  }
 
   ngOnInit(): void {
-    this.loadProducts();
-    this.loadCategories();
-  }
+    this.store.dispatch(ProductsActions.loadProducts());
+    this.store.dispatch(ProductsActions.loadCategories());
 
-  loadProducts(): void {
-    this.loading = true;
-    this.productService.getProducts().subscribe({
-      next: (data) => {
-        this.products = data;
-        this.filteredProducts = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Failed to load products';
-        this.loading = false;
-      }
+     // Reactive: أي تغيير يروح للـ store
+    this.filtersForm.valueChanges.subscribe(filters => {
+      this.store.dispatch(ProductsActions.setFilters({ filters }));
     });
   }
 
-  loadCategories(): void {
-    this.productService.getCategories().subscribe({
-      next: (data) => {
-        this.categories = ['all', ...data];
-      },
-      error: () => {
-        this.categories = ['all'];
-      }
-    });
+  onCategorySelect(category: string): void {
+    this.store.dispatch(ProductsActions.selectCategory({ category }));
   }
 
-  filterByCategory(category: string): void {
-    this.selectedCategory = category;
+  // onSearch(term: string): void {
+  //   this.store.dispatch(ProductsActions.setSearchTerm({ searchTerm: term }));
+  // }
 
-    if (category === 'all') {
-      this.filteredProducts = this.products;
-    } else {
-      this.productService.getProductsByCategory(category).subscribe({
-        next: (data) => (this.filteredProducts = data),
-        error: () => (this.filteredProducts = [])
-      });
-    }
-  }
+  // onPriceChange(min: number, max: number): void {
+  //   this.store.dispatch(
+  //     ProductsActions.setPriceRange({ min: +min || 0, max: +max || Infinity })
+  //   );
+  // }
 }
 

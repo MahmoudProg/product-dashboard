@@ -1,8 +1,9 @@
+// products.effects.ts
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ProductService } from 'src/app/core/services/product.service';
 import * as ProductsActions from './products.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
+import { ProductService } from 'src/app/core/services/product.service';
 
 @Injectable()
 export class ProductsEffects {
@@ -13,10 +14,8 @@ export class ProductsEffects {
       ofType(ProductsActions.loadProducts),
       mergeMap(() =>
         this.productService.getProducts().pipe(
-          map((products) => ProductsActions.loadProductsSuccess({ products })),
-          catchError((error) =>
-            of(ProductsActions.loadProductsFailure({ error: error.message }))
-          )
+          map(products => ProductsActions.loadProductsSuccess({ products })),
+          catchError(error => of(ProductsActions.loadProductsFailure({ error })))
         )
       )
     )
@@ -27,10 +26,8 @@ export class ProductsEffects {
       ofType(ProductsActions.loadCategories),
       mergeMap(() =>
         this.productService.getCategories().pipe(
-          map((categories) => ProductsActions.loadCategoriesSuccess({ categories })),
-          catchError((error) =>
-            of(ProductsActions.loadCategoriesFailure({ error: error.message }))
-          )
+          map(categories => ProductsActions.loadCategoriesSuccess({ categories })),
+          catchError(error => of(ProductsActions.loadCategoriesFailure({ error })))
         )
       )
     )

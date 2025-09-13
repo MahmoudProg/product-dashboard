@@ -25,3 +25,18 @@ export const selectCategory = createAction(
   '[Products] Select Category',
   props<{ category: string }>()
 );
+
+// export const setSearchTerm = createAction(
+//   '[Products] Set Search Term',
+//   props<{ searchTerm: string }>()
+// );
+
+// export const setPriceRange = createAction(
+//   '[Products] Set Price Range',
+//   props<{ min: number; max: number }>()
+// );
+
+export const setFilters = createAction(
+  '[Products] Set Filters',
+  props<{ filters: { searchTerm: string; min: number; max: number } }>()
+);
