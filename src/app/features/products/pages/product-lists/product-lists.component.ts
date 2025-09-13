@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, merge, Observable, Subject, takeUntil } from 'rxjs';
 import { Product } from 'src/app/core/models/Product ';
 import { selectCategories, selectError, selectFilteredProducts, selectLoading, selectSelectedCategory } from '../../state/products.selectors';
 import * as ProductsActions from '../../state/products.actions';
@@ -14,7 +14,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 })
 export class ProductListsComponent {
-
+  private destroy$ = new Subject<void>();
 
   products$: Observable<Product[]>;
   categories$: Observable<string[]>;
@@ -34,7 +34,8 @@ export class ProductListsComponent {
     this.filtersForm = this.fb.group({
       searchTerm: [''],
       min: [0],
-      max: [Infinity]
+      max: [Infinity],
+      category: [''],
     });
   }
 
@@ -44,8 +45,38 @@ export class ProductListsComponent {
 
      // Reactive: أي تغيير يروح للـ store
     this.filtersForm.valueChanges.subscribe(filters => {
-      this.store.dispatch(ProductsActions.setFilters({ filters }));
+      this.store.dispatch(ProductsActions.updateFilters({ filters }));
     });
+
+
+    // ✅ نعمل merge بين searchTerm ببطيء وباقي القيم بسرعة
+    const searchTerm$ = this.filtersForm.get('searchTerm')!.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      map((searchTerm) => ({
+        ...this.filtersForm.value,
+        searchTerm,
+      }))
+    );
+
+    const otherFilters$ = this.filtersForm.valueChanges.pipe(
+      map((filters) => ({
+        ...filters,
+        searchTerm: this.filtersForm.get('searchTerm')!.value, // نرجع آخر قيمة للـ searchTerm
+      }))
+    );
+
+    merge(searchTerm$, otherFilters$)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((filters) => {
+        this.store.dispatch(ProductsActions.updateFilters({ filters }));
+        this.store.dispatch(ProductsActions.loadProducts());
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onCategorySelect(category: string): void {

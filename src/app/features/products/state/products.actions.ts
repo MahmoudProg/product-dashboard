@@ -12,6 +12,7 @@ export const loadProductsFailure = createAction(
 );
 
 export const loadCategories = createAction('[Products] Load Categories');
+
 export const loadCategoriesSuccess = createAction(
   '[Products] Load Categories Success',
   props<{ categories: string[] }>()
@@ -36,7 +37,7 @@ export const selectCategory = createAction(
 //   props<{ min: number; max: number }>()
 // );
 
-export const setFilters = createAction(
+export const updateFilters = createAction(
   '[Products] Set Filters',
   props<{ filters: { searchTerm: string; min: number; max: number } }>()
 );

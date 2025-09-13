@@ -58,9 +58,9 @@ export const productsReducer = createReducer(
     ...state,
     selectedCategory: category,
   })),
-  
+
   // Select Category
-  on(ProductsActions.setFilters, (state, { filters }) => ({
+  on(ProductsActions.updateFilters, (state, { filters }) => ({
     ...state,
     filters
   })),
