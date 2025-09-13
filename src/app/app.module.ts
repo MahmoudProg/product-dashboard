@@ -4,8 +4,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { loggingInterceptor } from './core/interceptors/logging.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ProductsModule } from './features/products/products.module';
+import { LoggingInterceptor } from './core/interceptors/logging.interceptor';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -13,14 +17,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    CommonModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    ProductsModule,
+    MatSnackBarModule
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useValue: loggingInterceptor,
+      useClass: LoggingInterceptor,
       multi: true
     }
   ],

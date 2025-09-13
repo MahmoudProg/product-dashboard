@@ -1,13 +1,26 @@
-<div class="product-grid">
-  <ng-container *ngIf="products$ | async as products; else loading">
-    <div *ngFor="let product of products; trackBy: trackByProductId" class="product-card">
+<div class="container">
+  <h2>Products</h2>
+
+  <!-- Categories Filter -->
+  <div class="filter">
+    <label>Filter by category:</label>
+    <select [(ngModel)]="selectedCategory" (change)="filterByCategory(selectedCategory)">
+      <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+    </select>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading">Loading products...</div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- Grid -->
+  <div class="grid">
+    <div class="card" *ngFor="let product of filteredProducts; ">
       <img [src]="product.image" alt="{{ product.title }}" />
       <h3>{{ product.title }}</h3>
       <p>{{ product.price | currency }}</p>
     </div>
-  </ng-container>
-
-  <ng-template #loading>
-    <p>Loading products...</p>
-  </ng-template>
+  </div>
 </div>
