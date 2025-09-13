@@ -10,6 +10,7 @@ import { LoggingInterceptor } from './core/interceptors/logging.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { CommonModule } from '@angular/common';
     BrowserAnimationsModule,
     HttpClientModule,
     ProductsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    StoreModule.forRoot({}, {})
   ],
   providers: [
     {
