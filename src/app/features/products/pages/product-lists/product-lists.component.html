@@ -1,0 +1,13 @@
+<div class="product-grid">
+  <ng-container *ngIf="products$ | async as products; else loading">
+    <div *ngFor="let product of products; trackBy: trackByProductId" class="product-card">
+      <img [src]="product.image" alt="{{ product.title }}" />
+      <h3>{{ product.title }}</h3>
+      <p>{{ product.price | currency }}</p>
+    </div>
+  </ng-container>
+
+  <ng-template #loading>
+    <p>Loading products...</p>
+  </ng-template>
+</div>
