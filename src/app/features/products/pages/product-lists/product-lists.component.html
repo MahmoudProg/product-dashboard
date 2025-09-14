@@ -1,58 +1,20 @@
-<!-- <div class="container" style="display: none;">
-  <h2>Products</h2>
-
-  <div class="categories">
-  <button
-    *ngFor="let cat of categories"
-    (click)="filterByCategory(cat)"
-    [class.active]="selectedCategory === cat">
-    {{ cat }}
-  </button>
-</div>
-  <div class="filter">
-    <label>Filter by category:</label>
-    <select [(ngModel)]="selectedCategory" (change)="filterByCategory(selectedCategory)">
-      <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-    </select>
-  </div>
-
-  <div *ngIf="loading">Loading products...</div>
-
-  <div *ngIf="error" class="error">{{ error }}</div>
-
-  <div class="grid">
-    <div class="card" *ngFor="let product of filteredProducts; ">
-      <img [src]="product.image" alt="{{ product.title }}" />
-      <h3>{{ product.title }}</h3>
-      <p>{{ product.price | currency }}</p>
-    </div>
-  </div>
-</div> -->
-
-<!--
-<div class="categories">
-  <button
-    *ngFor="let cat of (categories$ | async)"
-    (click)="onCategorySelect(cat)"
-    [class.active]="(selectedCategory$ | async) === cat">
-    {{ cat }}
-  </button>
-</div>
-
-<div class="grid">
-  <div class="card" *ngFor="let product of (products$ | async)">
-    <img [src]="product.image" alt="{{ product.title }}" />
-    <h3>{{ product.title }}</h3>
-    <p>{{ product.price | currency }}</p>
-  </div>
-</div> -->
-
 
 <div class="filters" [formGroup]="filtersForm">
   <input type="text" formControlName="searchTerm" placeholder="Search products..." />
-
   <input type="number" formControlName="min" placeholder="Min price" />
   <input type="number" formControlName="max" placeholder="Max price" />
+
+  <!-- Sorting -->
+  <select formControlName="sortBy">
+    <option [ngValue]="null">Sort By</option>
+    <option value="price">Price</option>
+    <option value="title">Title</option>
+  </select>
+  <select formControlName="sortOrder">
+    <option [ngValue]="null">Order</option>
+    <option value="asc">Ascending</option>
+    <option value="desc">Descending</option>
+  </select>
 </div>
 
 <div class="categories">
@@ -80,4 +42,23 @@
     <h3>{{ product.title }}</h3>
     <p>{{ product.price | currency }}</p>
   </div>
+</div>
+
+
+<div class="pagination">
+  <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+  <span>Page {{ currentPage }} of {{ totalPages }}</span>
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+</div>
+
+<div class="pagination-controls">
+  <label>
+    Products per page:
+    <select [(ngModel)]="pageSize" (change)="onPageSizeChange($event)">
+      <option [value]="5">5</option>
+      <option [value]="10">10</option>
+      <option [value]="20">20</option>
+      <option [value]="50">50</option>
+    </select>
+  </label>
 </div>

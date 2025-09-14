@@ -39,5 +39,18 @@ export const selectCategory = createAction(
 
 export const updateFilters = createAction(
   '[Products] Set Filters',
-  props<{ filters: { searchTerm: string; min: number; max: number } }>()
+  props<{ filters: {
+    searchTerm: string;
+    min: number;
+    max: number;
+    sortBy: 'price' | 'title' | null;
+    sortOrder: 'asc' | 'desc' | null;
+    page: number;
+    pageSize: number;
+  } }>()
+);
+
+export const setFilters = createAction(
+  '[Products] Set Filters',
+  props<{ filters: { searchTerm: string; min: number; max: number; sortBy: 'price' | 'title' | null; sortOrder: 'asc' | 'desc' | null } }>()
 );

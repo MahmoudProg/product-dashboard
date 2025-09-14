@@ -61,10 +61,38 @@ export const selectFilteredProducts = createSelector(
       filtered = filtered.filter(p => p.price <= +filters.max);
     }
 
+
+    // Sorting
+    if (filters.sortBy) {
+      filtered = [...filtered].sort((a, b) => {
+        const fieldA = a[filters.sortBy!];
+        const fieldB = b[filters.sortBy!];
+
+        if (filters.sortOrder === 'asc') {
+          return fieldA > fieldB ? 1 : fieldA < fieldB ? -1 : 0;
+        } else {
+          return fieldA < fieldB ? 1 : fieldA > fieldB ? -1 : 0;
+        }
+      });
+    }
+
     return filtered;
   }
 );
 
+export const selectPaginatedProducts = createSelector(
+  selectFilteredProducts,
+  selectFilters,
+  (products, filters) => {
+    const page = filters.page ?? 1;
+    const pageSize = filters.pageSize ?? 10;
+
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+
+    return products.slice(start, end);
+  }
+);
 
 // export const selectFilteredProducts = createSelector(
 //   selectAllProducts,

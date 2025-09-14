@@ -7,10 +7,14 @@ export const initialState: ProductsState = {
   products: [],
   categories: [],
   selectedCategory: null,
-    filters: {
+  filters: {
     searchTerm: '',
     min: 0,
-    max: Infinity
+    max: Infinity,
+    sortBy: 'title',
+    sortOrder: 'asc',
+    page: 1,
+    pageSize : 10
   },
   loading: false,
   error: null
@@ -59,9 +63,12 @@ export const productsReducer = createReducer(
     selectedCategory: category,
   })),
 
-  // Select Category
+  // Filter
   on(ProductsActions.updateFilters, (state, { filters }) => ({
     ...state,
-    filters
+    filters: {
+      ...state.filters, // To Keep The old values
+      ...filters        // To Update New Values
+    }
   })),
 );
