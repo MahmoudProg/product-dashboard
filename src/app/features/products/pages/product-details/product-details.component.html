@@ -10,6 +10,7 @@
 
 <!-- Product details -->
 <div *ngIf="product$ | async as product">
+
   <h2>{{ product.title }}</h2>
   <img [src]="product.image" [alt]="product.title" />
   <p><strong>Price:</strong> {{ product.price | currency }}</p>
@@ -17,6 +18,26 @@
   <p><strong>Description:</strong> {{ product.description }}</p>
   <p><strong>Rating:</strong> {{ product.rating?.rate }} ({{ product.rating?.count }} reviews)</p>
 
-  <button (click)="addToFavorites(product)">Add to Favorites</button>
-  <button (click)="addToCart(product)">Add to Cart</button>
+  <!-- Favorites button -->
+  <ng-container *ngIf="product$ | async as product">
+    <button *ngIf="isFavorite$ | async; else addFavBtn"
+            (click)="removeFromFavorites(product.id)">
+      Remove from Favorites
+    </button>
+    <ng-template #addFavBtn>
+      <button (click)="addToFavorites(product)">Add to Favorites</button>
+    </ng-template>
+  </ng-container>
+
+  
+  <!-- Cart button -->
+  <ng-container *ngIf="product$ | async as product">
+    <button *ngIf="isInCart$ | async; else addCartBtn"
+            (click)="removeFromCart(product.id)">
+      Remove from Cart
+    </button>
+    <ng-template #addCartBtn>
+      <button (click)="addToCart(product)">Add to Cart</button>
+    </ng-template>
+  </ng-container>
 </div>
