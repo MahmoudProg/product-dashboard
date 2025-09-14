@@ -10,6 +10,11 @@ export const selectAllProducts = createSelector(
   (state) => state?.products ?? []
 );
 
+export const selectSelectedProduct = createSelector(
+  selectProductsState,
+  (state) => state.selectedProduct ?? null
+);
+
 export const selectCategories = createSelector(
   selectProductsState,
   (state) => ['all', ...(state?.categories ?? [])]

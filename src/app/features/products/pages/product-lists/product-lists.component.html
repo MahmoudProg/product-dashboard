@@ -38,8 +38,14 @@
 
 <div class="grid" *ngIf="!(loading$ | async)">
   <div class="card" *ngFor="let product of (products$ | async)">
-    <img [src]="product.image" alt="{{ product.title }}" />
     <h3>{{ product.title }}</h3>
+    <!-- <a [routerLink]="['/products', product.id]"> -->
+    <a [routerLink]="['/', 'products', product.id]">
+      <img [src]="product.image" [alt]="product.title" />
+      <h3>{{ product.title }}</h3>
+    </a>
+
+
     <p>{{ product.price | currency }}</p>
   </div>
 </div>
@@ -62,3 +68,5 @@
     </select>
   </label>
 </div>
+
+

@@ -27,16 +27,6 @@ export const selectCategory = createAction(
   props<{ category: string }>()
 );
 
-// export const setSearchTerm = createAction(
-//   '[Products] Set Search Term',
-//   props<{ searchTerm: string }>()
-// );
-
-// export const setPriceRange = createAction(
-//   '[Products] Set Price Range',
-//   props<{ min: number; max: number }>()
-// );
-
 export const updateFilters = createAction(
   '[Products] Set Filters',
   props<{ filters: {
@@ -54,3 +44,25 @@ export const setFilters = createAction(
   '[Products] Set Filters',
   props<{ filters: { searchTerm: string; min: number; max: number; sortBy: 'price' | 'title' | null; sortOrder: 'asc' | 'desc' | null } }>()
 );
+
+
+// Load Product Detail
+export const loadProductById = createAction(
+  '[Products] Load Product By Id',
+  props<{ id: string }>()
+);
+
+export const loadProductByIdSuccess = createAction(
+  '[Products] Load Product By Id Success',
+  props<{ product: Product }>()
+);
+
+export const loadProductByIdFailure = createAction(
+  '[Products] Load Product By Id Failure',
+  props<{ error: string }>()
+);
+
+
+
+// ✅ Clear selected product
+export const clearSelectedProduct = createAction('[Products] Clear Selected Product');

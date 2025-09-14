@@ -17,7 +17,8 @@ export const initialState: ProductsState = {
     pageSize : 10
   },
   loading: false,
-  error: null
+  error: null,
+  selectedProduct: null,
 };
 
 export const productsReducer = createReducer(
@@ -71,4 +72,48 @@ export const productsReducer = createReducer(
       ...filters        // To Update New Values
     }
   })),
+
+  // Product Detail
+  on(ProductsActions.loadProductById, (state) => ({
+    ...state,
+    loading: true,
+    error: null
+  })),
+  on(ProductsActions.loadProductByIdSuccess, (state, { product }) => ({
+    ...state,
+    selectedProduct: product,
+    loading: false
+  })),
+  on(ProductsActions.loadProductByIdFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  })),
+
+  on(ProductsActions.loadProductByIdSuccess, (state, { product }) => ({
+    ...state,
+    selectedProduct: product,
+    loading: false,
+    error: null
+  })),
+
+  on(ProductsActions.loadProductByIdFailure, (state, { error }) => ({
+    ...state,
+    selectedProduct: null,
+    loading: false,
+    error
+  })),
+
+  //  Clear selected product
+  on(ProductsActions.clearSelectedProduct, (state) => ({
+    ...state,
+    selectedProduct: null
+  }))
 );
+
+
+
+
+
+
+

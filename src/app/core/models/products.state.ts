@@ -4,6 +4,7 @@ export interface ProductsState {
   products: Product[];
   categories: string[];
   selectedCategory: string | null;
+  selectedProduct?: Product | null;
   filters: {
     searchTerm: string;
     min: number;

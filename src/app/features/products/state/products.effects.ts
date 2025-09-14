@@ -32,4 +32,20 @@ export class ProductsEffects {
       )
     )
   );
+
+  loadProductById$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ProductsActions.loadProductById),
+      mergeMap(({ id }) =>
+        //الـ +id لتحويل الـ string اللي جاية من الـ route لـ number (لأن الـ service متوقع number).
+        this.productService.getProductById(+id).pipe(  // نمرر id كرقم
+          map((product) => ProductsActions.loadProductByIdSuccess({ product })),
+          catchError((error) =>
+            of(ProductsActions.loadProductByIdFailure({ error: error.message }))
+          )
+        )
+      )
+    )
+  );
+
 }

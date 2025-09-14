@@ -1,1 +1,22 @@
-<p>product-details works!</p>
+<!-- Loading state -->
+<div *ngIf="loading$ | async" class="loading">
+  Loading product...
+</div>
+
+<!-- Error state -->
+<div *ngIf="error$ | async as error" class="error">
+  {{ error }}
+</div>
+
+<!-- Product details -->
+<div *ngIf="product$ | async as product">
+  <h2>{{ product.title }}</h2>
+  <img [src]="product.image" [alt]="product.title" />
+  <p><strong>Price:</strong> {{ product.price | currency }}</p>
+  <p><strong>Category:</strong> {{ product.category }}</p>
+  <p><strong>Description:</strong> {{ product.description }}</p>
+  <p><strong>Rating:</strong> {{ product.rating?.rate }} ({{ product.rating?.count }} reviews)</p>
+
+  <button (click)="addToFavorites(product)">Add to Favorites</button>
+  <button (click)="addToCart(product)">Add to Cart</button>
+</div>
