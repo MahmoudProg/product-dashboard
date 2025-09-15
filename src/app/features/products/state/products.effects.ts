@@ -1,4 +1,4 @@
-// src/app/features/products/state/products.effects.ts
+
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as ProductsActions from './products.actions';
@@ -12,17 +12,15 @@ import { environment } from 'src/environments/environment';
 export class ProductsEffects {
   constructor(private actions$: Actions, private productService: ProductService) {}
 
-  // <-- مهم: نعلن النوع Generic هنا عشان TypeScript يعرف اللي رايح وراجع
   private retryWithBackoff<T>(maxRetry = 3, delayMs = 1000): OperatorFunction<T, T> {
     return retryWhen(errors =>
       errors.pipe(
         scan((retryCount, error) => {
           if (retryCount >= maxRetry) {
-            throw error; // بعد ما نزيد عن الحد نرمي الخطأ للخروج من retryWhen
+            throw error;
           }
           return retryCount + 1;
         }, 0),
-        // نأخر كل محاولة حسب رقم المحاولة باستخدام timer
         delayWhen((retryCount) => timer(retryCount * delayMs))
       )
     );

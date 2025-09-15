@@ -1,0 +1,15 @@
+<div class="rating-stars">
+  <ng-container *ngFor="let star of [].constructor(fullStars)">
+    <span class="star filled">★</span>
+  </ng-container>
+
+  <span *ngIf="halfStar" class="star half">★</span>
+
+  <ng-container *ngFor="let star of [].constructor(emptyStars)">
+    <span class="star">★</span>
+  </ng-container>
+
+  <span *ngIf="showText" class="rating-text">
+    {{ rate }} ({{ count }} reviews)
+  </span>
+</div>

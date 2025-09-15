@@ -1,0 +1,43 @@
+.container {
+  box-shadow: 0px 0px 37px 0px #00000012;
+  height: 100%;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.currency {
+  font-size: 2rem;
+  color: #009688;
+}
+
+
+button {
+  outline: none;
+  border: none;
+  border-radius: 1rem;
+  padding: 0.7rem 1.3rem;
+  cursor: pointer;
+
+  &.Add-to {
+    background: #c7eae4;
+    color: #0d7e6b;
+
+    &:hover {
+      background: #ddf3f0;
+      color: #31ad98;
+      box-shadow: 0px 17px 16px -9px #31ad9845;
+    }
+  }
+
+  &.Remove-from {
+    background: #ffefde;
+    color: #FF9800;
+
+    &:hover {
+      background: #fff1e3;
+      color: #FF9800;
+      box-shadow: 0px 17px 16px -9px #ff98003b;
+    }
+  }
+
+}

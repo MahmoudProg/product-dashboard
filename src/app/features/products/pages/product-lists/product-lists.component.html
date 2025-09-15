@@ -1,4 +1,4 @@
-
+<div class="container">
 <div class="filters" [formGroup]="filtersForm">
   <input type="text" formControlName="searchTerm" placeholder="Search products..." />
   <input type="number" formControlName="min" placeholder="Min price" />
@@ -27,26 +27,85 @@
 </div>
 
 
-
-<div *ngIf="loading$ | async" class="loading">
-  Loading products...
+<!-- Loading skeletons -->
+<div *ngIf="loading$ | async" class="grid">
+  <ngx-skeleton-loader
+    *ngFor="let item of [1,2,3,4,5,6]"
+    appearance="line"
+    [theme]="{ width: '100%', height: '20rem' }">
+  </ngx-skeleton-loader>
 </div>
 
+<!-- Error message -->
 <div *ngIf="error$ | async as error" class="error">
-  {{ error }}
+  <p>⚠️ {{ error }}</p>
+  <!-- <button (click)="reload()">Retry</button> -->
 </div>
 
-<div class="grid" *ngIf="!(loading$ | async)">
-  <div class="card" *ngFor="let product of (products$ | async)">
-    <h3>{{ product.title }}</h3>
-    <!-- <a [routerLink]="['/products', product.id]"> -->
+<!-- <cdk-virtual-scroll-viewport
+  itemSize="250"
+  class="grid"
+  *ngIf="!(loading$ | async)">
+
+  <div class="card" *cdkVirtualFor="let product of (products$ | async)">
     <a [routerLink]="['/', 'products', product.id]">
       <img [src]="product.image" [alt]="product.title" />
       <h3>{{ product.title }}</h3>
     </a>
-
-
     <p>{{ product.price | currency }}</p>
+  </div>
+
+</cdk-virtual-scroll-viewport> -->
+
+<div class="grid" *ngIf="!(loading$ | async)">
+  <div
+    class="card"
+    *ngFor="let product of (products$ | async) ; trackBy: trackByProduct"
+    >
+    <div
+      class="image-container"
+      [routerLink]="['/products', product.id]"
+      >
+      <img [src]="product.image" [alt]="product.title" />
+    </div>
+    <div class="content">
+      <h3>{{ product.title }}</h3>
+      <div class="category-Rating">
+        <p class="category">
+          {{ product.category }}
+        </p>
+        <div Class="Rating">
+          <span class="star">★</span>
+          <strong class="rating-value"> {{ product.rating?.rate }}  </strong>
+          <span>({{ product.rating?.count }})</span>
+        </div>
+      </div>
+      <div class="custom-divider"></div>
+      <div class="add-to-cart-and-price">
+        <strong class="price">{{ product.price | currency }}</strong>
+
+ <!-- Cart button -->
+        <ng-container *ngIf="isInCart(product.id) | async; else addCartBtn">
+          <button
+            (click)="removeFromCart(product.id)"
+            class="Remove-from-cart"
+          >
+            Remove from Cart
+          </button>
+        </ng-container>
+        <ng-template #addCartBtn>
+          <button
+            class="Add-to-cart"
+            (click)="addToCart(product)"
+          >
+            Add to Cart
+          </button>
+        </ng-template>
+
+        <!-- <button class="Add-to-cart">Add to cart</button>
+        <button class="Remove-from-cart">Remove from cart</button> -->
+      </div>
+    </div>
   </div>
 </div>
 
@@ -70,3 +129,4 @@
 </div>
 
 
+</div>

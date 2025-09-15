@@ -4,6 +4,11 @@ import { debounceTime, distinctUntilChanged, map, merge, Observable, Subject, ta
 import { Product } from 'src/app/core/models/Product ';
 import { selectCategories, selectError, selectFilteredProducts, selectLoading, selectPaginatedProducts, selectSelectedCategory } from '../../state/products.selectors';
 import * as ProductsActions from '../../state/products.actions';
+import * as CartActions from './../../../cart/state/cart.actions';
+import * as FavoritesActions from './../../../favorites/state/favorites.actions';
+import { selectCart } from './../../../cart/state/cart.selectors';
+import { selectFavorites } from './../../../favorites/state/favorites.selectors';
+
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -138,6 +143,26 @@ export class ProductListsComponent {
     this.pageSize = newSize;
     this.currentPage = 1;
     this.updatePagination();
+  }
+
+  cartItems$ = this.store.select(selectCart);
+
+  addToCart(product: Product) {
+    this.store.dispatch(CartActions.addToCart({ product }));
+  }
+
+  removeFromCart(productId: number) {
+    this.store.dispatch(CartActions.removeFromCart({ productId }));
+  }
+
+  isInCart(productId: number): Observable<boolean> {
+    return this.cartItems$.pipe(
+      map(items => items.some(item => item.id === productId))
+    );
+  }
+
+  trackByProduct(index: number, product: Product): number {
+    return product.id;
   }
 }
 

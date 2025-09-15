@@ -10,6 +10,9 @@ import { StoreModule } from '@ngrx/store';
 import { productsFeatureKey, productsReducer } from './state/products.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ProductsEffects } from './state/products.effects';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -23,6 +26,9 @@ import { ProductsEffects } from './state/products.effects';
     FormsModule,
     ProductsRoutingModule,
     ReactiveFormsModule,
+    NgxSkeletonLoaderModule,
+    ScrollingModule,
+    SharedModule,
 
     // Register products feature state
     StoreModule.forFeature(productsFeatureKey, productsReducer),

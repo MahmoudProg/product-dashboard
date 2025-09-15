@@ -13,10 +13,10 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreModule } from './core/core.module';
-// import { SharedModule } from './shared/shared.module';
 import { FavoritesModule } from './features/favorites/favorites.module';
 import { CartModule } from './features/cart/cart.module';
-import { SharedModule } from './shared/shared.module';
+// import { SharedModule } from './shared/shared.module';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
   declarations: [
@@ -30,10 +30,17 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     HttpClientModule,
     MatSnackBarModule,
-
+    // NgxSkeletonLoaderModule,
+    NgxSkeletonLoaderModule.forRoot({
+        animation: 'progress',
+        theme: {
+          'border-radius': '5px',
+          'background-color': '#f0f0f0',
+        },
+      }),
     // Core & Shared
     CoreModule,
-    SharedModule,
+    // SharedModule,
 
     // Features
     ProductsModule,

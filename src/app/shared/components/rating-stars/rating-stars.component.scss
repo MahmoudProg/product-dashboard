@@ -1,0 +1,26 @@
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star {
+  font-size: 28px;
+  color: #ccc; // فاضي
+}
+
+.star.filled {
+  color: #f4bd3d; // دهبي
+}
+
+.star.half {
+  background: linear-gradient(90deg, #f4bd3d 50%, #ccc 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.rating-text {
+  margin-left: 6px;
+  font-size: 14px;
+  color: #555;
+}
