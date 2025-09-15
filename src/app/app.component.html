@@ -1,3 +1,11 @@
 
+  <header class="d-flex justify-content-center py-3">
+    <div class="language-switcher d-flex gap-2 mt-2">
+      <button (click)="switchLanguage('en')" [class.active]="currentLang === 'en'">EN</button>
+      <button (click)="switchLanguage('ar')" [class.active]="currentLang === 'ar'">AR</button>
+    </div>
+  </header>
+<div class="b-example-divider"></div>
+
 <!-- <app-product-lists></app-product-lists> -->
 <router-outlet></router-outlet>

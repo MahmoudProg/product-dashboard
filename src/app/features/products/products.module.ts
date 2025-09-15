@@ -13,6 +13,7 @@ import { ProductsEffects } from './state/products.effects';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     NgxSkeletonLoaderModule,
     ScrollingModule,
     SharedModule,
+    TranslateModule,
 
     // Register products feature state
     StoreModule.forFeature(productsFeatureKey, productsReducer),

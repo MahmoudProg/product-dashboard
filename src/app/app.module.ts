@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductsModule } from './features/products/products.module';
 import { LoggingInterceptor } from './core/interceptors/logging.interceptor';
@@ -15,8 +15,13 @@ import { EffectsModule } from '@ngrx/effects';
 import { CoreModule } from './core/core.module';
 import { FavoritesModule } from './features/favorites/favorites.module';
 import { CartModule } from './features/cart/cart.module';
-// import { SharedModule } from './shared/shared.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -30,7 +35,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     BrowserAnimationsModule,
     HttpClientModule,
     MatSnackBarModule,
-    // NgxSkeletonLoaderModule,
+
     NgxSkeletonLoaderModule.forRoot({
         animation: 'progress',
         theme: {
@@ -50,6 +55,15 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     // NgRx root
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
+
+    TranslateModule.forRoot({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [
     {
