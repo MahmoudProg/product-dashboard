@@ -18,5 +18,5 @@ Follow these steps to run the project locally:
 
 1. **Clone the repository**
 ```bash
-git clone <repository-url>
+git clone <https://github.com/MahmoudProg/product-dashboard.git>
 cd product-dashboard
