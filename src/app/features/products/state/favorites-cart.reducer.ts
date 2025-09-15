@@ -9,14 +9,14 @@ export interface FavoritesCartState {
 }
 export const favoritesCartFeatureKey = 'favoritesCart';
 export const initialState: FavoritesCartState = {
-favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
+  favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
   cart: JSON.parse(localStorage.getItem('cart') || '[]')
 };
 
 export const favoritesCartReducer = createReducer(
   initialState,
 
-   on(FavoritesCartActions.addToFavorites, (state, { product }) => {
+  on(FavoritesCartActions.addToFavorites, (state, { product }) => {
     if (state.favorites.some(p => p.id === product.id)) {
       return state; // Dont add again
     }
