@@ -104,7 +104,7 @@ export class ProductListsComponent {
   }
 
   currentPage = 1;
-  pageSize = 4;
+  pageSize = 5;
   totalPages = 1; // هتتحسب بناءً على عدد المنتجات
 
   // تحديث الصفحة
