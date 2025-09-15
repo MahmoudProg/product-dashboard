@@ -16,13 +16,7 @@ favorites: JSON.parse(localStorage.getItem('favorites') || '[]'),
 export const favoritesCartReducer = createReducer(
   initialState,
 
-  // Favorites
-  // on(FavoritesCartActions.addToFavorites, (state, { product }) => ({
-  //   ...state,
-  //   favorites: [...state.favorites, product]
-  // })),
-
-  on(FavoritesCartActions.addToFavorites, (state, { product }) => {
+   on(FavoritesCartActions.addToFavorites, (state, { product }) => {
     if (state.favorites.some(p => p.id === product.id)) {
       return state; // Dont add again
     }
@@ -42,11 +36,6 @@ export const favoritesCartReducer = createReducer(
     favorites
   })),
 
-  // Cart
-  // on(FavoritesCartActions.addToCart, (state, { product }) => ({
-  //   ...state,
-  //   cart: [...state.cart, product]
-  // })),
   on(FavoritesCartActions.addToCart, (state, { product }) => {
     if (state.cart.some(p => p.id === product.id)) {
       return state; // Dont add again
