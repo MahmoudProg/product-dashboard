@@ -1,44 +1,27 @@
-// favorites.selectors.spec.ts
-import { selectFavorites, selectFavoritesCount } from './favorites.selectors';
-import { FavoritesState } from './favorites.reducer';
+/// <reference types="cypress" />
 
-describe('Favorites Selectors', () => {
-  const initialState: FavoritesState = {
-    favorites: [
-    {
-      id: 1,
-      title: 'Product 1',
-      price: 100,
-      description: 'Desc 1',
-      category: 'Category 1',
-      image: 'image1.jpg',
-      rating: { rate: 4.5, count: 10 },
-    },
-    {
-      id: 2,
-      title: 'Product 2',
-      price: 200,
-      description: 'Desc 2',
-      category: 'Category 2',
-      image: 'image2.jpg',
-      rating: { rate: 4.0, count: 5 },
-    },
-    ],
-  };
-
-  it('should select favorites array', () => {
-    const result = selectFavorites.projector(initialState);
-    expect(result.length).toBe(2);
-    expect(result[0].title).toBe('Product 1');
+describe('Favorites Page', () => {
+  beforeEach(() => {
+    // نزور صفحة المنتجات
+    cy.visit('/products');
   });
 
-  it('should select favorites count', () => {
-    const result = selectFavoritesCount.projector(initialState.favorites);
-    expect(result).toBe(2);
+  it('should add products to favorites and check count', () => {
+    // نفترض في UI فيه زر يضيف المنتج للمفضلة
+    cy.get('.Add-to-favorites').first().click();
+
+    // نتأكد أن عدد المنتجات في favorites زاد
+    cy.get('.favorites-count').should('contain.text', '1');
+
+    cy.get('.Add-to-favorites').eq(1).click();
+    cy.get('.favorites-count').should('contain.text', '2');
+
+    // نتأكد من اسم أول منتج موجود في favorites
+    cy.get('.favorites-list .product-title').first().should('contain.text', 'Product 1');
   });
 
-  it('should return empty array if state is undefined', () => {
-    const result = selectFavorites.projector(undefined as any);
-    expect(result).toEqual([]);
+  it('should show empty favorites if none added', () => {
+    cy.get('.favorites-list').should('not.exist');
+    cy.get('.favorites-count').should('contain.text', '0');
   });
 });

@@ -1,78 +1,54 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ProductListsComponent } from './product-lists.component';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import * as ProductsActions from '../../state/products.actions';
-import * as CartActions from '../../../cart/state/cart.actions';
-import { Product } from 'src/app/core/models/Product ';
-import { TranslateModule } from '@ngx-translate/core';
+/// <reference types="cypress" />
 
-
-
-describe('ProductListsComponent', () => {
-  let component: ProductListsComponent;
-  let fixture: ComponentFixture<ProductListsComponent>;
-  let store: MockStore;
-  const initialState = {
-    products: [],
-    cart: [],
-    selectedCategory: null
-  };
-
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule,TranslateModule.forRoot()],
-      declarations: [ProductListsComponent],
-      providers: [provideMockStore({ initialState })]
-    }).compileComponents();
-
-    store = TestBed.inject(MockStore);
-    fixture = TestBed.createComponent(ProductListsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+describe('Product Lists Page', () => {
+  beforeEach(() => {
+    cy.visit('/products');
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('should display products list', () => {
+    cy.get('.grid .card').should('have.length.greaterThan', 0);
   });
 
-  it('should dispatch loadProducts and loadCategories on ngOnInit', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    component.ngOnInit();
-    expect(dispatchSpy).toHaveBeenCalledWith(ProductsActions.loadProducts());
-    expect(dispatchSpy).toHaveBeenCalledWith(ProductsActions.loadCategories());
+  it('should apply price range filter', () => {
+    cy.get('input[formControlName="searchTerm"]').type('Product');
+    cy.get('button').contains('APPLY_RANGE').click();
+
+
+    cy.get('.grid .card').each(($el) => {
+      cy.wrap($el).find('.price').invoke('text').then(parseFloat).should('be.within', '50', 500);
+    });
   });
 
-  it('should update filters when applyRange is called', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    component.Min_range = 50;
-    component.Max_range = 500;
-    component.applyRange();
-    const filters = {
-      ...component.filtersForm.value,
-      min: 50,
-      max: 500
-    };
-    expect(dispatchSpy).toHaveBeenCalledWith(ProductsActions.updateFilters({ filters }));
+  it('should add and remove product from cart', () => {
+    cy.get('.Add-to-cart').first().click();
+    cy.get('.Remove-from-cart').should('exist').click();
+    cy.get('.Add-to-cart').should('exist');
   });
 
-  it('should dispatch addToCart', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    const product: Product = { id: 1, title: 'Test', price: 100, category: 'Cat', description: '', image: '', rating: { rate: 5, count: 10 } };
-    component.addToCart(product);
-    expect(dispatchSpy).toHaveBeenCalledWith(CartActions.addToCart({ product }));
+  it('should filter products by category', () => {
+    cy.get('.categories button').contains('Category 1').click();
+    cy.get('.grid .card .category').each(($el) => {
+      cy.wrap($el).should('contain.text', 'Category 1');
+    });
   });
 
-  it('should dispatch removeFromCart', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    component.removeFromCart(1);
-    expect(dispatchSpy).toHaveBeenCalledWith(CartActions.removeFromCart({ productId: 1 }));
+  it('should sort products', () => {
+    cy.get('select[formControlName="sortBy"]').select('price');
+    cy.get('select[formControlName="sortOrder"]').select('asc');
+
+    let lastPrice = 0;
+    cy.get('.grid .card .price').each(($el) => {
+      cy.wrap($el).invoke('text').then((text) => {
+        const price = (text);
+        cy.wrap(price).should('be.gte', lastPrice);
+        lastPrice = price;
+      });
+    });
   });
 
-  it('should call onCategorySelect', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    component.onCategorySelect('Cat');
-    expect(dispatchSpy).toHaveBeenCalledWith(ProductsActions.selectCategory({ category: 'Cat' }));
+
+  it('should navigate pagination', () => {
+    cy.get('.pagination button').contains('NEXT').click();
+    cy.get('.pagination span').should('contain.text', '2');
   });
 });
