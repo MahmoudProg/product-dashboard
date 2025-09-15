@@ -20,3 +20,6 @@ Follow these steps to run the project locally:
 ```bash
 git clone <https://github.com/MahmoudProg/product-dashboard.git>
 cd product-dashboard
+
+
+## Setup Instructions
