@@ -29,7 +29,7 @@
     </ng-template>
   </ng-container>
 
-  
+
   <!-- Cart button -->
   <ng-container *ngIf="product$ | async as product">
     <button *ngIf="isInCart$ | async; else addCartBtn"

@@ -11,9 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-import { productsFeatureKey, productsReducer } from './features/products/state/products.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { ProductsEffects } from './features/products/state/products.effects';
 
 @NgModule({
   declarations: [
@@ -28,8 +26,10 @@ import { ProductsEffects } from './features/products/state/products.effects';
     HttpClientModule,
     ProductsModule,
     MatSnackBarModule,
-    StoreModule.forRoot({ [productsFeatureKey]: productsReducer }),
-    EffectsModule.forRoot([ProductsEffects]),
+
+    // Root store must exist, even if empty
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]), // Empty root effects
   ],
   providers: [
     {

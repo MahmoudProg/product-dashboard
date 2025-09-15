@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { tap } from 'rxjs/operators';
 import * as FavoritesActions from './favorites-cart.actions';
-// import * as CartActions from './cart.actions';
 
 @Injectable()
 export class FavoritesCartEffects {

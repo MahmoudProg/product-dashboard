@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
+import { combineLatest, map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { Product } from 'src/app/core/models/Product ';
 import * as ProductsActions from '../../state/products.actions';
 import { selectSelectedProduct, selectLoading, selectError } from '../../state/products.selectors';
@@ -38,38 +38,25 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     this.favorites$ = this.store.select(selectFavorites);
     this.cart$ = this.store.select(selectCart);
 
-    // // Combine product with favorites
-    // this.isFavorite$ = this.store.select(selectSelectedProduct).pipe(
-    //   map(product => {
-    //     if (!product) return false;
-    //     let favorites: Product[] = [];
-    //     this.favorites$.subscribe(favs => (favorites = favs)).unsubscribe();
-    //     return favorites.some(f => f.id === product.id);
-    //   })
-    // );
 
-    // // Combine product with cart
-    // this.isInCart$ = this.store.select(selectSelectedProduct).pipe(
-    //   map(product => {
-    //     if (!product) return false;
-    //     let cart: any[] = [];
-    //     this.cart$.subscribe(c => (cart = c)).unsubscribe();
-    //     return cart.some(item => item.id === product.id);
-    //   })
-    // );
-
-    // ✅ ندمج المنتج مع الـ favorites
+    //  in this code i check if this product lockated in localStorage favorites
     this.isFavorite$ = combineLatest([this.product$, this.favorites$]).pipe(
-      map(([product, favorites]) =>
-        !!product && favorites.some(f => f.id === product.id)
-      )
+      map(([product, favorites]) =>{
+        // const localStorage_favorite = JSON.parse(localStorage.getItem('favorites') || '[]');
+        // favorites = localStorage_favorite
+        if (!product) return false;
+        return favorites.some(f => f.id == product.id);
+      })
     );
 
-    // ✅ ندمج المنتج مع الـ cart
+    //  in this code i check if this product lockated in localStorage cart
     this.isInCart$ = combineLatest([this.product$, this.cart$]).pipe(
-      map(([product, cart]) =>
-        !!product && cart.some(c => c.id === product.id)
-      )
+      map(([product, cart]) => {
+        // const localStorage_cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        // cart = localStorage_cart
+        if (!product) return false;
+        return cart.some(c => c.id == product.id);
+      })
     );
 
   }
@@ -92,9 +79,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   addToFavorites(product: Product) {
-    // this.store.dispatch(FavoritesCartActions.addToFavorites({ product }));
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    console.log(favorites);
+    this.store.dispatch(FavoritesCartActions.addToFavorites({ product }));
   }
 
   removeFromFavorites(productId: number) {
@@ -102,9 +87,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   addToCart(product: Product) {
-    // this.store.dispatch(FavoritesCartActions.addToCart({ product }));
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    console.log(cart);
+    this.store.dispatch(FavoritesCartActions.addToCart({ product }));
   }
 
   removeFromCart(productId: number) {
