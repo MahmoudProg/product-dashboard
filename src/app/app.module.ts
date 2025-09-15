@@ -12,6 +12,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { CoreModule } from './core/core.module';
+// import { SharedModule } from './shared/shared.module';
+import { FavoritesModule } from './features/favorites/favorites.module';
+import { CartModule } from './features/cart/cart.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -24,12 +29,20 @@ import { EffectsModule } from '@ngrx/effects';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    ProductsModule,
     MatSnackBarModule,
 
-    // Root store must exist, even if empty
+    // Core & Shared
+    CoreModule,
+    SharedModule,
+
+    // Features
+    ProductsModule,
+    CartModule,
+    FavoritesModule,
+
+    // NgRx root
     StoreModule.forRoot({}),
-    EffectsModule.forRoot([]), // Empty root effects
+    EffectsModule.forRoot([]),
   ],
   providers: [
     {

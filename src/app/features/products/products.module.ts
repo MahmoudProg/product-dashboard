@@ -31,8 +31,8 @@ import { FavoritesCartEffects } from './state/favorites-cart.effects';
     EffectsModule.forFeature([ProductsEffects]),
 
     // Register favorites/cart feature state
-    StoreModule.forFeature(favoritesCartFeatureKey, favoritesCartReducer),
-    EffectsModule.forFeature([FavoritesCartEffects]),
+    // StoreModule.forFeature(favoritesCartFeatureKey, favoritesCartReducer),
+    // EffectsModule.forFeature([FavoritesCartEffects]),
 
   ],
   exports: [

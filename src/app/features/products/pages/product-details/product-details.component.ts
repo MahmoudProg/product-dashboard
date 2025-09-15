@@ -6,9 +6,12 @@ import { Product } from 'src/app/core/models/Product ';
 import * as ProductsActions from '../../state/products.actions';
 import { selectSelectedProduct, selectLoading, selectError } from '../../state/products.selectors';
 
-// استيراد الأكشنات
-import * as FavoritesCartActions from '../../state/favorites-cart.actions';
-import { selectFavorites, selectCart } from '../../state/favorites-cart.selectors';
+import * as CartActions from './../../../cart/state/cart.actions';
+import * as FavoritesActions from './../../../favorites/state/favorites.actions';
+
+import { selectCart } from './../../../cart/state/cart.selectors';
+import { selectFavorites } from './../../../favorites/state/favorites.selectors';
+
 
 @Component({
   selector: 'app-product-details',
@@ -42,8 +45,6 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     //  in this code i check if this product lockated in localStorage favorites
     this.isFavorite$ = combineLatest([this.product$, this.favorites$]).pipe(
       map(([product, favorites]) =>{
-        // const localStorage_favorite = JSON.parse(localStorage.getItem('favorites') || '[]');
-        // favorites = localStorage_favorite
         if (!product) return false;
         return favorites.some(f => f.id == product.id);
       })
@@ -52,8 +53,6 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     //  in this code i check if this product lockated in localStorage cart
     this.isInCart$ = combineLatest([this.product$, this.cart$]).pipe(
       map(([product, cart]) => {
-        // const localStorage_cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        // cart = localStorage_cart
         if (!product) return false;
         return cart.some(c => c.id == product.id);
       })
@@ -79,18 +78,18 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   addToFavorites(product: Product) {
-    this.store.dispatch(FavoritesCartActions.addToFavorites({ product }));
+    this.store.dispatch(FavoritesActions.addToFavorites({ product }));
   }
 
   removeFromFavorites(productId: number) {
-    this.store.dispatch(FavoritesCartActions.removeFromFavorites({ productId }));
+    this.store.dispatch(FavoritesActions.removeFromFavorites({ productId }));
   }
 
   addToCart(product: Product) {
-    this.store.dispatch(FavoritesCartActions.addToCart({ product }));
+    this.store.dispatch(CartActions.addToCart({ product }));
   }
 
   removeFromCart(productId: number) {
-    this.store.dispatch(FavoritesCartActions.removeFromCart({ productId }));
+    this.store.dispatch(CartActions.removeFromCart({ productId }));
   }
 }

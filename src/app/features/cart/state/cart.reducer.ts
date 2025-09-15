@@ -11,7 +11,7 @@ export const initialState: CartState = {
   cart: JSON.parse(localStorage.getItem('cart') || '[]')
 };
 
-export const favoritesCartReducer = createReducer(
+export const CartReducer = createReducer(
   initialState,
 
 
