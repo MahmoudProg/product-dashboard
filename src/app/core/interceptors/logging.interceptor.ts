@@ -22,7 +22,7 @@ export class LoggingInterceptor implements HttpInterceptor {
       tap({
         next: (event: HttpEvent<any>) => {
           if (event instanceof HttpResponse) {
-            console.log(' Response body:', event.body);
+            // console.log(' Response body:', event.body);
           }
         }
       }),

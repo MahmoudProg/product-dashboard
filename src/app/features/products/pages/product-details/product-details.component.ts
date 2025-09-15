@@ -11,6 +11,7 @@ import * as FavoritesActions from './../../../favorites/state/favorites.actions'
 
 import { selectCart } from './../../../cart/state/cart.selectors';
 import { selectFavorites } from './../../../favorites/state/favorites.selectors';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -33,7 +34,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   isInCart$: Observable<boolean>;
 
 
-  constructor(private route: ActivatedRoute, private store: Store) {
+  constructor(private route: ActivatedRoute, private store: Store , private location: Location) {
     this.product$ = this.store.select(selectSelectedProduct);
     this.loading$ = this.store.select(selectLoading);
     this.error$ = this.store.select(selectError);
@@ -75,6 +76,10 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   addToFavorites(product: Product) {

@@ -11,11 +11,11 @@
   }
 }
 
-// cdk-virtual-scroll-viewport {
-//   height: 100vh; /* أو أي قيمة مناسبة */
-//   width: 100%;
-//   overflow: auto;
-// }
+cdk-virtual-scroll-viewport {
+  height: 100vh; /* أو أي قيمة مناسبة */
+  // width: 100%;
+  overflow: auto;
+}
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
@@ -104,12 +104,32 @@
         color: #0d7e6b;
       }
 
+
+    }
+  }
+
+}
+
+
+
+
       button {
         outline: none;
         border: none;
         border-radius: 1rem;
         padding: 0.7rem 1.3rem;
         cursor: pointer;
+        background: #c7eae4;
+        color: #0d7e6b;
+          &:hover {
+            background: #ddf3f0;
+            color: #31ad98;
+            box-shadow: 0px 17px 16px -9px #31ad9845;
+          }
+          &.active {
+            background: #2a9d8f;
+            color: #fff;
+          }
 
         &.Add-to-cart {
           background: #c7eae4;
@@ -134,33 +154,3 @@
         }
 
       }
-    }
-  }
-
-}
-
-.categories {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-
-  button {
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    cursor: pointer;
-    background: #eee;
-    transition: background 0.2s ease;
-
-    &.active {
-      background: #2a9d8f;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    &:hover {
-      background: #ddd;
-    }
-  }
-}

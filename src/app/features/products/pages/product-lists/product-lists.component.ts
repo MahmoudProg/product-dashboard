@@ -5,10 +5,7 @@ import { Product } from 'src/app/core/models/Product ';
 import { selectCategories, selectError, selectFilteredProducts, selectLoading, selectPaginatedProducts, selectSelectedCategory } from '../../state/products.selectors';
 import * as ProductsActions from '../../state/products.actions';
 import * as CartActions from './../../../cart/state/cart.actions';
-import * as FavoritesActions from './../../../favorites/state/favorites.actions';
 import { selectCart } from './../../../cart/state/cart.selectors';
-import { selectFavorites } from './../../../favorites/state/favorites.selectors';
-
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -28,6 +25,9 @@ export class ProductListsComponent {
   error$: Observable<string | null>;
 
   filtersForm: FormGroup;
+  Min_range: number = 1;
+  Max_range: number = 1000;
+  
   constructor(private store: Store , private fb: FormBuilder) {
     this.products$ = this.store.select(selectPaginatedProducts);
     this.categories$ = this.store.select(selectCategories);
@@ -35,9 +35,9 @@ export class ProductListsComponent {
     this.loading$ = this.store.select(selectLoading);
     this.error$ = this.store.select(selectError);
 
-
     this.filtersForm = this.fb.group({
       searchTerm: [''],
+      range: this.fb.control({ point1: 1, point2: 10000 }),
       min: [0],
       max: [Infinity],
       category: [''],
@@ -45,59 +45,70 @@ export class ProductListsComponent {
       sortOrder: [null],
       page: [1],
       pageSize: [this.pageSize]
-
     });
+
+
+
   }
 
-  ngOnInit(): void {
-    this.store.dispatch(ProductsActions.loadProducts());
-    this.store.dispatch(ProductsActions.loadCategories());
 
-     // Reactive: أي تغيير يروح للـ store
-    this.filtersForm.valueChanges.subscribe(filters => {
-      this.store.dispatch(ProductsActions.updateFilters({ filters }));
-    });
+_onPoint1Changed(val: number) {
+  this.Min_range = val;
+}
 
-    // تحديث totalPages بناءً على عدد المنتجات بعد الفلترة
-    this.store.select(selectFilteredProducts)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(products => {
-        this.totalPages = Math.ceil(products.length / this.pageSize);
+_onPoint2Changed(val: number) {
+  this.Max_range = val;
+}
 
-        // فقط صحح الصفحة الحالية لو زادت عن totalPages
-        if (this.currentPage > this.totalPages && this.totalPages > 0) {
-          this.currentPage = this.totalPages;
-          // هنا ممكن تعمل dispatch للـ page فقط، لكن خلي بالك ما تعملش loadProducts تاني
-          const filters = { ...this.filtersForm.value, page: this.currentPage };
-          this.store.dispatch(ProductsActions.updateFilters({ filters }));
-          // بدون loadProducts!
-        }
-      });
+applyRange(): void {
+  this.filtersForm.get('min')?.setValue(this.Min_range, { emitEvent: true });
+  this.filtersForm.get('max')?.setValue(this.Max_range, { emitEvent: true });
+}
 
-    // ✅ نعمل merge بين searchTerm ببطيء وباقي القيم بسرعة
-    const searchTerm$ = this.filtersForm.get('searchTerm')!.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      map((searchTerm) => ({
-        ...this.filtersForm.value,
-        searchTerm,
-      }))
-    );
+ngOnInit(): void {
+  this.store.dispatch(ProductsActions.loadProducts());
+  this.store.dispatch(ProductsActions.loadCategories());
 
-    const otherFilters$ = this.filtersForm.valueChanges.pipe(
-      map((filters) => ({
-        ...filters,
-        searchTerm: this.filtersForm.get('searchTerm')!.value, // نرجع آخر قيمة للـ searchTerm
-      }))
-    );
+  // تحديث totalPages بناءً على عدد المنتجات بعد الفلترة
+  this.store.select(selectFilteredProducts)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(products => {
+      this.totalPages = Math.ceil(products.length / this.pageSize);
 
-    merge(searchTerm$, otherFilters$)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((filters) => {
+      if (this.currentPage > this.totalPages && this.totalPages > 0) {
+        this.currentPage = this.totalPages;
+        const filters = { ...this.filtersForm.value, page: this.currentPage };
         this.store.dispatch(ProductsActions.updateFilters({ filters }));
-        this.store.dispatch(ProductsActions.loadProducts());
-      });
-  }
+      }
+    });
+
+  const searchTerm$ = this.filtersForm.get('searchTerm')!.valueChanges.pipe(
+    debounceTime(300),
+    distinctUntilChanged(),
+    map((searchTerm) => ({
+      ...this.filtersForm.value,
+      searchTerm,
+    }))
+  );
+
+
+  const otherFilters$ = this.filtersForm.valueChanges.pipe(
+    map((filters) => ({
+      ...filters,
+      searchTerm: this.filtersForm.get('searchTerm')!.value,
+      min: this.filtersForm.get('min')!.value,
+      max: this.filtersForm.get('max')!.value,
+    }))
+  );
+
+  merge(searchTerm$, otherFilters$)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((filters) => {
+      this.store.dispatch(ProductsActions.updateFilters({ filters }));
+      this.store.dispatch(ProductsActions.loadProducts());
+    });
+}
+
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -109,7 +120,7 @@ export class ProductListsComponent {
   }
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
   totalPages = 1; // هتتحسب بناءً على عدد المنتجات
 
   // تحديث الصفحة

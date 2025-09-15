@@ -13,6 +13,9 @@
   <!-- Product details -->
   <ng-container *ngIf="product$ | async as product">
     <div class="row">
+      <div class="col-12">
+        <button (click)="goBack()">Go Back</button>
+      </div>
       <div class="col-12 col-md-6 mb-3 p-5">
 
         <img [src]="product.image" [alt]="product.title" class="img-fluid w-md-auto" />

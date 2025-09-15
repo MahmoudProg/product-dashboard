@@ -1,0 +1,20 @@
+<p class="label">{{Range_Title}} <span id="startValue">{{Point1}}</span> To <span id="endValue">{{Point2}}</span></p>
+<div class="range-wrapper">
+  <input
+  type="range"
+  class="range-slider"
+  [min]="min"
+  [max]="max"
+  [(ngModel)]="Point1"
+  (input)="onStartChange()"
+/>
+<input
+  type="range"
+  class="range-slider"
+  [min]="min"
+  [max]="max"
+  [(ngModel)]="Point2"
+  (input)="onEndChange()"
+/>
+  <div class="fake-bar" #fakeBar></div>
+</div>
