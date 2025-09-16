@@ -17,7 +17,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ProductListsComponent {
   private destroy$ = new Subject<void>();
-
+  cartItems$!: Observable<Product[]>;
   products$: Observable<Product[]>;
   categories$: Observable<string[]>;
   selectedCategory$: Observable<string>;
@@ -30,12 +30,13 @@ export class ProductListsComponent {
   filtersVisible = false;
 
 
-  constructor(private store: Store , private fb: FormBuilder) {
+  constructor(private store: Store, private fb: FormBuilder) {
     this.products$ = this.store.select(selectPaginatedProducts);
     this.categories$ = this.store.select(selectCategories);
     this.selectedCategory$ = this.store.select(selectSelectedCategory);
     this.loading$ = this.store.select(selectLoading);
     this.error$ = this.store.select(selectError);
+    this.cartItems$ = this.store.select(selectCart);
 
     this.filtersForm = this.fb.group({
       searchTerm: [''],
@@ -54,75 +55,74 @@ export class ProductListsComponent {
   }
 
 
-_onPoint1Changed(val: number) {
-  this.Min_range = val;
-}
+  _onPoint1Changed(val: number) {
+    this.Min_range = val;
+  }
 
-_onPoint2Changed(val: number) {
-  this.Max_range = val;
-}
+  _onPoint2Changed(val: number) {
+    this.Max_range = val;
+  }
 
-// applyRange(): void {
-//   this.filtersForm.get('min')?.setValue(this.Min_range, { emitEvent: true });
-//   this.filtersForm.get('max')?.setValue(this.Max_range, { emitEvent: true });
-// }
-applyFilters(searchTerm: string, sortBy: string, sortOrder: string): void {
-  const filters:any = {
-    searchTerm,
-    min: this.Min_range,
-    max: this.Max_range,
-    sortBy: sortBy || null,
-    sortOrder: sortOrder || null,
-    page: this.currentPage,
-    pageSize: this.pageSize
-  };
+  applyFilters(filters: { searchTerm: string; sortBy: string; sortOrder: string }): void {
+    const { searchTerm, sortBy, sortOrder } = filters;
 
-  this.store.dispatch(ProductsActions.updateFilters({ filters }));
-  this.store.dispatch(ProductsActions.loadProducts());
-}
-
-ngOnInit(): void {
-  this.store.dispatch(ProductsActions.loadProducts());
-  this.store.dispatch(ProductsActions.loadCategories());
-
-  this.store.select(selectFilteredProducts)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(products => {
-      this.totalPages = Math.ceil(products.length / this.pageSize);
-
-      if (this.currentPage > this.totalPages && this.totalPages > 0) {
-        this.currentPage = this.totalPages;
-        const filters = { ...this.filtersForm.value, page: this.currentPage };
-        this.store.dispatch(ProductsActions.updateFilters({ filters }));
-      }
-    });
-
-  const searchTerm$ = this.filtersForm.get('searchTerm')!.valueChanges.pipe(
-    debounceTime(300),
-    distinctUntilChanged(),
-    map((searchTerm) => ({
-      ...this.filtersForm.value,
+    const filtersObj: any = {
       searchTerm,
-    }))
-  );
+      min: this.Min_range,
+      max: this.Max_range,
+      sortBy: sortBy || null,
+      sortOrder: sortOrder || null,
+      page: this.currentPage,
+      pageSize: this.pageSize
+    };
+
+    this.store.dispatch(ProductsActions.updateFilters({ filters: filtersObj }));
+    this.store.dispatch(ProductsActions.loadProducts());
+  }
 
 
-  const otherFilters$ = this.filtersForm.valueChanges.pipe(
-    map((filters) => ({
-      ...filters,
-      searchTerm: this.filtersForm.get('searchTerm')!.value,
-      min: this.filtersForm.get('min')!.value,
-      max: this.filtersForm.get('max')!.value,
-    }))
-  );
+  ngOnInit(): void {
+    this.store.dispatch(ProductsActions.loadProducts());
+    this.store.dispatch(ProductsActions.loadCategories());
 
-  merge(searchTerm$, otherFilters$)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((filters) => {
-      this.store.dispatch(ProductsActions.updateFilters({ filters }));
-      this.store.dispatch(ProductsActions.loadProducts());
-    });
-}
+    this.store.select(selectFilteredProducts)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(products => {
+        this.totalPages = Math.ceil(products.length / this.pageSize);
+
+        if (this.currentPage > this.totalPages && this.totalPages > 0) {
+          this.currentPage = this.totalPages;
+          const filters = { ...this.filtersForm.value, page: this.currentPage };
+          this.store.dispatch(ProductsActions.updateFilters({ filters }));
+        }
+      });
+
+    const searchTerm$ = this.filtersForm.get('searchTerm')!.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      map((searchTerm) => ({
+        ...this.filtersForm.value,
+        searchTerm,
+      }))
+    );
+
+
+    const otherFilters$ = this.filtersForm.valueChanges.pipe(
+      map((filters) => ({
+        ...filters,
+        searchTerm: this.filtersForm.get('searchTerm')!.value,
+        min: this.filtersForm.get('min')!.value,
+        max: this.filtersForm.get('max')!.value,
+      }))
+    );
+
+    merge(searchTerm$, otherFilters$)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((filters) => {
+        this.store.dispatch(ProductsActions.updateFilters({ filters }));
+        this.store.dispatch(ProductsActions.loadProducts());
+      });
+  }
 
 
   ngOnDestroy() {
@@ -162,14 +162,13 @@ ngOnInit(): void {
     this.store.dispatch(ProductsActions.loadProducts());
   }
 
-  onPageSizeChange(event: Event) {
-    const newSize = +(event.target as HTMLSelectElement).value;
+
+  onPageSizeChange(newSize: number) {
     this.pageSize = newSize;
     this.currentPage = 1;
     this.updatePagination();
   }
 
-  cartItems$ = this.store.select(selectCart);
 
   addToCart(product: Product) {
     this.store.dispatch(CartActions.addToCart({ product }));
@@ -188,7 +187,6 @@ ngOnInit(): void {
   trackByProduct(index: number, product: Product): number {
     return product.id;
   }
-
 
   toggleFilters() {
     this.filtersVisible = !this.filtersVisible;

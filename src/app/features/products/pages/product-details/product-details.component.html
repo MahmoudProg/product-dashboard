@@ -18,7 +18,7 @@
   <ng-container *ngIf="product$ | async as product">
     <div class="row">
       <div class="col-12">
-        <button (click)="goBack()">{{ 'GO_BACK' | translate }}</button>
+        <button appButtonStyle="add" (click)="goBack()">{{ 'GO_BACK' | translate }}</button>
       </div>
       <div class="col-12 col-md-6 mb-3 p-5">
 
@@ -40,22 +40,22 @@
           <!-- Favorites button -->
           <ng-container *ngIf="product$ | async as product">
             <button *ngIf="isFavorite$ | async; else addFavBtn" (click)="removeFromFavorites(product.id)"
-              class="Remove-from">
+              appButtonStyle="remove">
               {{ 'REMOVE_FAVORITES' | translate }}
             </button>
             <ng-template #addFavBtn>
-              <button (click)="addToFavorites(product)" class="Add-to">{{ 'ADD_FAVORITES' | translate }}</button>
+              <button (click)="addToFavorites(product)" appButtonStyle="add" >{{ 'ADD_FAVORITES' | translate }}</button>
             </ng-template>
           </ng-container>
 
 
           <!-- Cart button -->
           <ng-container *ngIf="product$ | async as product">
-            <button *ngIf="isInCart$ | async; else addCartBtn" (click)="removeFromCart(product.id)" class="Remove-from">
+            <button *ngIf="isInCart$ | async; else addCartBtn" (click)="removeFromCart(product.id)" appButtonStyle="remove">
               {{ 'REMOVE_CART' | translate }}
             </button>
             <ng-template #addCartBtn>
-              <button (click)="addToCart(product)" class="Add-to">{{ 'ADD_CART' | translate }}</button>
+              <button (click)="addToCart(product)" appButtonStyle="add">{{ 'ADD_CART' | translate }}</button>
             </ng-template>
           </ng-container>
         </div>

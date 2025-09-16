@@ -4,6 +4,8 @@ import { RatingStarsComponent } from './components/rating-stars/rating-stars.com
 import { StyledInputDirective } from './directives/styled-input.directive';
 import { RangeInputComponent } from './components/range-input/range-input.component';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from './components/pagination/pagination.component';
+import { ButtonStyleDirective } from './directives/button-style.directive';
 
 @NgModule({
   declarations: [
@@ -12,6 +14,8 @@ import { FormsModule } from '@angular/forms';
     RatingStarsComponent,
     StyledInputDirective,
     RangeInputComponent,
+    PaginationComponent,
+    ButtonStyleDirective,
 
   ],
   imports: [CommonModule,FormsModule],
@@ -19,7 +23,9 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     RatingStarsComponent,
     StyledInputDirective,
-    RangeInputComponent
+    RangeInputComponent,
+    PaginationComponent,
+    ButtonStyleDirective
   ],
 })
 export class SharedModule {}

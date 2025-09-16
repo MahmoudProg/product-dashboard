@@ -14,13 +14,21 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { FiltersComponent } from './components/filters/filters.component';
+import { CategoriesComponent } from './components/categories/categories.component';
+import { ProductCardComponent } from './components/product-card/product-card.component';
+import { ProductListComponent } from './components/product-list/product-list.component';
 
 
 @NgModule({
   declarations: [
     ProductsComponent,
     ProductListsComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    FiltersComponent,
+    CategoriesComponent,
+    ProductCardComponent,
+    ProductListComponent
   ],
   imports: [
     CommonModule,

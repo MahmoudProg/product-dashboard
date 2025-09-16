@@ -1,0 +1,61 @@
+
+<div class="filters-wrapper">
+  <!-- Filters button for mobile -->
+  <button appButtonStyle="add" class="burger-btn d-md-none mb-3" (click)="toggleFilters()">
+    ☰ {{ 'FILTERS' | translate }}
+  </button>
+  <hr class="d-md-none">
+
+  <!-- Mobile popup -->
+  <div class="filters-overlay d-md-none" *ngIf="filtersVisible" (click)="toggleFilters()">
+    <div class="filters-popup" (click)="$event.stopPropagation()">
+      <ng-container *ngTemplateOutlet="filtersContent"></ng-container>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-4">
+    <!-- Desktop filters -->
+    <div class="d-none d-md-block">
+      <ng-container *ngTemplateOutlet="filtersContent"></ng-container>
+    </div>
+
+    <!-- Template with actual filters -->
+    <ng-template #filtersContent>
+      <div class="filters d-flex flex-wrap gap-3 align-items-center mb-3">
+        <div class="d-flex flex-column ">
+          <label class="mb-1">{{ 'SEARCH_PRODUCTS' | translate }}</label>
+          <input appStyledInput type="text" #searchInput />
+        </div>
+
+        <div class="d-flex flex-column">
+          <label class="mb-1">{{ 'SORTING' | translate }}</label>
+          <div class="d-flex gap-2">
+            <select appStyledInput #sortBy>
+              <option [ngValue]="null">{{ 'SORT_BY' | translate }}</option>
+              <option value="price">{{ 'PRICE' | translate }}</option>
+              <option value="title">{{ 'TITLE' | translate }}</option>
+            </select>
+            <select appStyledInput #sortOrder>
+              <option [ngValue]="null">{{ 'ORDER' | translate }}</option>
+              <option value="asc">{{ 'ASCENDING' | translate }}</option>
+              <option value="desc">{{ 'DESCENDING' | translate }}</option>
+            </select>
+          </div>
+        </div>
+
+        <app-range-input
+          [Point1]="1"
+          [Point2]="1000"
+          [min]="1"
+          [max]="1000"
+          [Range_Title]="'RANGE_OF_PRICE' | translate"
+          (point1Change)="_onPoint1Changed($event)"
+          (point2Change)="_onPoint2Changed($event)">
+        </app-range-input>
+      </div>
+      <button appButtonStyle="add" (click)="applyFilters(searchInput.value, sortBy.value, sortOrder.value)">
+        {{ 'APPLY_FILTER' | translate }}
+      </button>
+    </ng-template>
+  </div>
+</div>

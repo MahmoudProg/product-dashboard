@@ -1,165 +1,43 @@
+
+
 <div class="container">
-  <!-- Filters button for mobile -->
-<button class="burger-btn d-md-none mb-3" (click)="toggleFilters()">
-  ☰ {{ 'FILTERS' | translate }}
-</button>
-
-<!-- Mobile popup -->
-<div class="filters-overlay d-md-none" *ngIf="filtersVisible" (click)="toggleFilters()">
-  <div class="filters-popup" (click)="$event.stopPropagation()">
-    <ng-container *ngTemplateOutlet="filtersContent"></ng-container>
-  </div>
-</div>
-<div class="row ">
-  <div class="col-12 col-lg-4">
 
 
-    <!-- Desktop filters -->
-    <div class="d-none d-md-block">
-      <ng-container *ngTemplateOutlet="filtersContent"></ng-container>
+  <div class="row">
+    <div class="col-12 col-lg-4">
+      <!-- Filters -->
+      <app-filters
+        (filtersApplied)="applyFilters($event)">
+      </app-filters>
     </div>
 
-    <!-- Template with actual filters -->
-    <ng-template #filtersContent>
-      <div class="filters d-flex flex-wrap gap-3 align-items-center mb-3">
-        <div class="d-flex flex-column ">
-          <label class="mb-1">{{ 'SEARCH_PRODUCTS' | translate }}</label>
-          <input appStyledInput type="text" #searchInput  />
-        </div>
+    <div class="col-12 col-lg-8">
+      <app-categories
+        [categories]="categories$ | async"
+        [selectedCategory]="selectedCategory$ | async"
+        (categorySelect)="onCategorySelect($event)">
+      </app-categories>
 
-        <div class="d-flex flex-column">
-          <label class="mb-1">{{ 'SORTING' | translate }}</label>
-          <div class="d-flex gap-2">
-            <select appStyledInput #sortBy>
-              <option [ngValue]="null">{{ 'SORT_BY' | translate }}</option>
-              <option value="price">{{ 'PRICE' | translate }}</option>
-              <option value="title">{{ 'TITLE' | translate }}</option>
-            </select>
-            <select appStyledInput #sortOrder>
-              <option [ngValue]="null">{{ 'ORDER' | translate }}</option>
-              <option value="asc">{{ 'ASCENDING' | translate }}</option>
-              <option value="desc">{{ 'DESCENDING' | translate }}</option>
-            </select>
-          </div>
-        </div>
+      <app-product-list
+        [products]="products$ | async"
+        [loading]="loading$ | async"
+        [error]="error$ | async"
+        [isInCart]="isInCart.bind(this)"
+        (addToCart)="addToCart($event)"
+        (removeFromCart)="removeFromCart($event)">
+      </app-product-list>
 
-        <app-range-input
-          [Point1]="1"
-          [Point2]="1000"
-          [min]="1"
-          [max]="1000"
-          [Range_Title]="'RANGE_OF_PRICE' | translate"
-          (point1Change)="_onPoint1Changed($event)"
-          (point2Change)="_onPoint2Changed($event)">
-        </app-range-input>
-      </div>
-      <button (click)="applyFilters(searchInput.value, sortBy.value, sortOrder.value)">{{ 'APPLY_FILTER' | translate }}</button>
-    </ng-template>
-
-  </div>
-  <div class="col-12 col-lg-8">
-
-    <div class="categories mb-3 d-flex flex-wrap gap-2">
-      <label class="d-block w-100">{{ ('CATEGORIES.' + 'CATEGORIES') | translate }}</label>
-      <button
-        *ngFor="let cat of (categories$ | async)"
-        (click)="onCategorySelect(cat)"
-        [class.active]="(selectedCategory$ | async) === cat">
-        {{ ('CATEGORIES.' + cat) | translate }}
-      </button>
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        [pageSize]="pageSize"
+        (prevPage)="prevPage()"
+        (nextPage)="nextPage()"
+        (pageSizeChange)="onPageSizeChange($event)">
+      </app-pagination>
     </div>
-
-
-      <!-- Loading skeletons -->
-      <div *ngIf="loading$ | async" class="grid">
-        <ngx-skeleton-loader
-          *ngFor="let item of [1,2,3,4,5,6]"
-          appearance="line"
-          [theme]="{ width: '100%', height: '20rem' }">
-        </ngx-skeleton-loader>
-      </div>
-
-      <!-- Error message -->
-      <div *ngIf="error$ | async as error" class="error">
-        <p> {{ error }}</p>
-      </div>
-
-      <div class="grid" *ngIf="!(loading$ | async)">
-        <div class="card" *ngFor="let product of (products$ | async) ; trackBy: trackByProduct" >
-          <div
-            class="image-container"
-            [routerLink]="['/products', product.id]"
-            >
-            <img [src]="product.image" [alt]="product.title" />
-          </div>
-          <div class="content">
-            <h3>{{ product.title }}</h3>
-            <div class="category-Rating">
-              <p class="category">
-                {{ product.category }}
-              </p>
-              <div Class="Rating">
-                <span class="star">★</span>
-                <strong class="rating-value"> {{ product.rating?.rate }}  </strong>
-                <span>({{ product.rating?.count }})</span>
-              </div>
-            </div>
-            <div class="custom-divider"></div>
-            <div class="add-to-cart-and-price">
-              <strong class="price">{{ product.price | currency }}</strong>
-
-        <!-- Cart button -->
-              <ng-container *ngIf="isInCart(product.id) | async; else addCartBtn">
-                <button
-                  (click)="removeFromCart(product.id)"
-                  class="Remove-from-cart"
-                >
-                  {{ 'REMOVE_FROM_CART' | translate }}
-                </button>
-              </ng-container>
-              <ng-template #addCartBtn>
-                <button
-                  class="Add-to-cart"
-                  (click)="addToCart(product)"
-                >
-                  {{ 'ADD_TO_CART' | translate }}
-                </button>
-              </ng-template>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-flex flex-column gap-3 mt-5">
-
-        <div class="pagination d-flex align-items-center gap-2">
-          <button (click)="prevPage()" [disabled]="currentPage === 1">{{ 'PREVIOUS' | translate }}</button>
-          <span>{{ 'PAGE' | translate }} {{ currentPage }} {{ 'OF' | translate }} {{ totalPages }}</span>
-          <button (click)="nextPage()" [disabled]="currentPage === totalPages">{{ 'NEXT' | translate }}</button>
-        </div>
-
-        <div class="pagination-controls">
-          <label>
-            {{ 'PRODUCTS_PER_PAGE' | translate }}
-            <select
-                  appStyledInput
-                  [(ngModel)]="pageSize"
-                  (change)="onPageSizeChange($event)"
-                  [ngModelOptions]="{standalone: true}">
-              <option [value]="5" selected>5</option>
-              <option [value]="10">10</option>
-              <option [value]="20">20</option>
-              <option [value]="50">50</option>
-            </select>
-          </label>
-        </div>
-      </div>
   </div>
 </div>
-
-
-</div>
-
 
 
 <!--
