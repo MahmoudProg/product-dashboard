@@ -14,12 +14,18 @@ This is an Angular-based Product Dashboard application that allows users to brow
 ---
 
 ## Setup Instructions
-Follow these steps to run the project locally:
+Follow these steps to set up and run the project locally:
 
-1. **Clone the repository**
+### 1. Prerequisites
+Make sure you have installed the following:
+- [Node.js](https://nodejs.org/) (v18+ recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+- Angular CLI (v15+)
 ```bash
-git clone <https://github.com/MahmoudProg/product-dashboard.git>
+npm install -g @angular/cli
+
+### 2. Clone the Repository
+Clone this repository to your local machine:
+git clone https://github.com/your-username/product-dashboard.git
 cd product-dashboard
-
-
-## Setup Instructions
+npm install
