@@ -114,12 +114,17 @@ cdk-virtual-scroll-viewport {
 
 
 
-
+.categories {
+  button{
+    flex: 1;
+    height: fit-content;
+  }
+}
 button {
   outline: none;
   border: none;
   border-radius: 1rem;
-  padding: 0.7rem 1.3rem;
+  padding: 0.5rem 1.3rem;
   cursor: pointer;
   background: #c7eae4;
   color: #0d7e6b;

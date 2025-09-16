@@ -10,7 +10,7 @@ describe('Product List Page', () => {
     cy.get('.filters input[formControlName="searchTerm"]').should('exist');
     cy.get('.filters select[formControlName="sortBy"]').should('exist');
     cy.get('.filters select[formControlName="sortOrder"]').should('exist');
-    cy.contains('APPLY_RANGE').should('exist');
+    cy.contains('APPLY_FILTER').should('exist');
 
     // Categories
     cy.get('.categories').should('exist');

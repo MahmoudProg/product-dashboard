@@ -62,9 +62,23 @@ _onPoint2Changed(val: number) {
   this.Max_range = val;
 }
 
-applyRange(): void {
-  this.filtersForm.get('min')?.setValue(this.Min_range, { emitEvent: true });
-  this.filtersForm.get('max')?.setValue(this.Max_range, { emitEvent: true });
+// applyRange(): void {
+//   this.filtersForm.get('min')?.setValue(this.Min_range, { emitEvent: true });
+//   this.filtersForm.get('max')?.setValue(this.Max_range, { emitEvent: true });
+// }
+applyFilters(searchTerm: string, sortBy: string, sortOrder: string): void {
+  const filters:any = {
+    searchTerm,
+    min: this.Min_range,
+    max: this.Max_range,
+    sortBy: sortBy || null,
+    sortOrder: sortOrder || null,
+    page: this.currentPage,
+    pageSize: this.pageSize
+  };
+
+  this.store.dispatch(ProductsActions.updateFilters({ filters }));
+  this.store.dispatch(ProductsActions.loadProducts());
 }
 
 ngOnInit(): void {

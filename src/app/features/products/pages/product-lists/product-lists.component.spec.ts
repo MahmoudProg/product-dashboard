@@ -11,7 +11,7 @@ describe('Product Lists Page', () => {
 
   it('should apply price range filter', () => {
     cy.get('input[formControlName="searchTerm"]').type('Product');
-    cy.get('button').contains('APPLY_RANGE').click();
+    cy.get('button').contains('APPLY_FILTER').click();
 
 
     cy.get('.grid .card').each(($el) => {
