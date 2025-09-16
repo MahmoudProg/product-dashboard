@@ -6,7 +6,6 @@ import { CartFeatureKey, CartReducer } from './state/cart.reducer';
 import { CartEffects } from './state/cart.effects';
 @NgModule({
   declarations: [
-    // هنا تحط أي components تخص الكارت (CartListComponent, CartSummaryComponent, ...)
   ],
   imports: [
     CommonModule,

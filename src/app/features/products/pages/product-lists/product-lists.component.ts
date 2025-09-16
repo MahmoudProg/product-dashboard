@@ -27,7 +27,7 @@ export class ProductListsComponent {
   filtersForm: FormGroup;
   Min_range: number = 1;
   Max_range: number = 1000;
-  
+
   constructor(private store: Store , private fb: FormBuilder) {
     this.products$ = this.store.select(selectPaginatedProducts);
     this.categories$ = this.store.select(selectCategories);
@@ -69,7 +69,6 @@ ngOnInit(): void {
   this.store.dispatch(ProductsActions.loadProducts());
   this.store.dispatch(ProductsActions.loadCategories());
 
-  // تحديث totalPages بناءً على عدد المنتجات بعد الفلترة
   this.store.select(selectFilteredProducts)
     .pipe(takeUntil(this.destroy$))
     .subscribe(products => {
@@ -121,9 +120,8 @@ ngOnInit(): void {
 
   currentPage = 1;
   pageSize = 10;
-  totalPages = 1; // هتتحسب بناءً على عدد المنتجات
+  totalPages = 1;
 
-  // تحديث الصفحة
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
@@ -138,7 +136,6 @@ ngOnInit(): void {
     }
   }
 
-  // dispatch للتحديث
   updatePagination() {
     const filters = {
       ...this.filtersForm.value,

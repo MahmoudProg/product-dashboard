@@ -7,12 +7,9 @@ import { FavoritesEffects } from './state/favorites.effects';
 
 @NgModule({
   declarations: [
-    // هنا تحط أي components تخص الكارت (FavoritesListComponent, FavoritesSummaryComponent, ...)
   ],
   imports: [
     CommonModule,
-
-    // Register Favorites feature state
     StoreModule.forFeature(favoritesFeatureKey, favoritesReducer),
     EffectsModule.forFeature([FavoritesEffects]),
   ]

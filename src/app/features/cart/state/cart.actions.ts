@@ -21,5 +21,5 @@ export const loadCart = createAction('[Cart] Load Cart from LocalStorage');
 
 export const loadCartSuccess = createAction(
   '[Cart] Load Cart Success',
-  props<{ cart: any[] }>() // ممكن تعمل interface CartItem لو حابب
+  props<{ cart: any[] }>() 
 );

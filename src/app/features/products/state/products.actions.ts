@@ -64,5 +64,5 @@ export const loadProductByIdFailure = createAction(
 
 
 
-// ✅ Clear selected product
+//  Clear selected product
 export const clearSelectedProduct = createAction('[Products] Clear Selected Product');
