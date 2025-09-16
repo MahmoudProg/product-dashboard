@@ -7,7 +7,7 @@
     appButtonStyle="add"
     *ngFor="let cat of categories"
     (click)="selectCategory(cat)"
-    [class.active]="selectedCategory === cat">
+    [active]="selectedCategory === cat">
     {{ ('CATEGORIES.' + cat) | translate }}
   </button>
 </div>
