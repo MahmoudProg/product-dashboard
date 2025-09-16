@@ -44,5 +44,55 @@ ng test
 
 ## Architecture & State Management
 
+The Product Dashboard project follows a **modular Angular architecture** with a clear separation of concerns:
+
+- **Core Module**: Contains singleton services and global utilities used across the app.
+- **Shared Module**: Contains reusable components, directives, and pipes.
+- **Features Modules**: Each feature (e.g., Products, Cart) has its own module with components, services, and state management setup.
+- **App Module**: Root module that ties everything together.
+
+### State Management
+
+The application uses **NgRx** for centralized state management. All key data, such as products, shopping cart, selected filters, and categories, is stored in the **NgRx Store**.  
+
+Key concepts:
+
+- **Store**: The single source of truth for the application's state.
+- **Actions**: Events that trigger state changes, e.g., `loadProducts`, `addToCart`.
+- **Reducers**: Pure functions that calculate the next state based on the current state and dispatched actions.
+- **Selectors**: Functions that read and return specific slices of the state, making it easy for components to access needed data.
+- **Effects**: Handle side effects such as API calls, keeping components clean and focused only on presentation.
+
+This setup allows:
+
+- Consistent and predictable state across the app.
+- Easy communication between components without `@Input`/`@Output`.
+- Improved performance since Angular re-renders only affected components.
+- Scalable architecture suitable for large applications.
+
+
 ### Project Structure
 You can see the full project structure in [STRUCTURE.txt](./STRUCTURE.txt)
+
+
+## i18n Setup & Performance Optimizations
+
+### Internationalization (i18n)
+
+The Product Dashboard supports multiple languages using **@ngx-translate/core**:
+
+- **Translation Files**: Stored in `assets/i18n/` as JSON files, e.g., `en.json`, `ar.json`.
+- **TranslateModule**: Imported in the root module to provide translation services app-wide.
+- **Usage in Components**: Use the `| translate` pipe to display translated text, e.g., `{{ 'SEARCH_PRODUCTS' | translate }}`.
+- **Dynamic Language Switching**: Users can change the language at runtime, and the UI updates instantly.
+
+### Performance Optimizations
+
+Several optimizations are applied to ensure smooth performance:
+
+1. **OnPush Change Detection**: Components use `ChangeDetectionStrategy.OnPush` wherever possible to reduce unnecessary re-renders.
+2. **TrackBy in *ngFor**: Improves performance for lists by letting Angular know which items changed.
+3. **Lazy Loading of Feature Modules**: Only loads feature modules when needed, reducing initial bundle size.
+4. **Memoized Selectors in NgRx**: Using `createSelector` ensures state slices are only recalculated when relevant state changes.
+5. **HTTP Caching for API Calls**: Frequently fetched data, like product details, are cached in services to reduce network calls.
+6. **Async Pipe**: Handles subscriptions automatically and avoids memory leaks.
