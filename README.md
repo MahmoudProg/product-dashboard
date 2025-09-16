@@ -96,3 +96,6 @@ Several optimizations are applied to ensure smooth performance:
 4. **Memoized Selectors in NgRx**: Using `createSelector` ensures state slices are only recalculated when relevant state changes.
 5. **HTTP Caching for API Calls**: Frequently fetched data, like product details, are cached in services to reduce network calls.
 6. **Async Pipe**: Handles subscriptions automatically and avoids memory leaks.
+
+### i18n Flow & HTTP Caching
+You can see the ASCII diagram for i18n, HTTP Caching in [i18n.txt](./i18n.txt)

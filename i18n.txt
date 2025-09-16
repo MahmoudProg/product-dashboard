@@ -1,0 +1,32 @@
++------------------+ +--------------------+
+| | | |
+| Component | ----> | TranslateService |
+| (uses |translate| | Loads JSON file |
+| pipe) | | from assets/i18n/ |
++------------------+ +--------------------+
+|
+v
++------------------+
+| User changes |
+| language at run- |
+| time |
++------------------+
+|
+v
++------------------+ +--------------------+
+| Component | <---- | TranslateService |
+| updates UI | | provides new texts |
++------------------+ +--------------------+
+
++------------------+ +--------------------+
+| ProductService | ----> | HTTP GET products |
+| caches product | | from API |
+| details in Map | +--------------------+
++------------------+
+|
+v
++------------------+
+| Next request for |
+| same product |
+| reads from cache |
++------------------+
