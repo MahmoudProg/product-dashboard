@@ -27,6 +27,8 @@ export class ProductListsComponent {
   filtersForm: FormGroup;
   Min_range: number = 1;
   Max_range: number = 1000;
+  filtersVisible = false;
+
 
   constructor(private store: Store , private fb: FormBuilder) {
     this.products$ = this.store.select(selectPaginatedProducts);
@@ -171,6 +173,11 @@ ngOnInit(): void {
 
   trackByProduct(index: number, product: Product): number {
     return product.id;
+  }
+
+
+  toggleFilters() {
+    this.filtersVisible = !this.filtersVisible;
   }
 }
 

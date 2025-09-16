@@ -31,5 +31,6 @@
   "REMOVE_FAVORITES": "Remove from Favorites",
   "ADD_FAVORITES": "Add to Favorites",
   "REMOVE_CART": "Remove from Cart",
-  "ADD_CART": "Add to Cart"
+  "ADD_CART": "Add to Cart",
+  "FILTERS":"Filters"
 }

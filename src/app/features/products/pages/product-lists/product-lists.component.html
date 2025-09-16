@@ -1,5 +1,24 @@
 <div class="container">
-<div class="filters d-flex flex-wrap gap-3 align-items-center mb-3" [formGroup]="filtersForm">
+ <!-- Filters button for mobile -->
+<button class="burger-btn d-md-none mb-3" (click)="toggleFilters()">
+  ☰ {{ 'FILTERS' | translate }}
+</button>
+
+<!-- Mobile popup -->
+<div class="filters-overlay d-md-none" *ngIf="filtersVisible" (click)="toggleFilters()">
+  <div class="filters-popup" (click)="$event.stopPropagation()">
+    <ng-container *ngTemplateOutlet="filtersContent"></ng-container>
+  </div>
+</div>
+
+<!-- Desktop filters -->
+<div class="d-none d-md-block">
+  <ng-container *ngTemplateOutlet="filtersContent"></ng-container>
+</div>
+
+<!-- Template with actual filters -->
+<ng-template #filtersContent>
+  <div class="filters d-flex flex-wrap gap-3 align-items-center mb-3" [formGroup]="filtersForm">
     <div class="d-flex flex-column ">
       <label class="mb-1">{{ 'SEARCH_PRODUCTS' | translate }}</label>
       <input appStyledInput type="text" formControlName="searchTerm"  />
@@ -21,19 +40,21 @@
       </div>
     </div>
 
-  <app-range-input
-              [Point1]="1"
-              [Point2]="1000"
-              [min]="1"
-              [max]="1000"
-              [Range_Title]="'RANGE_OF_PRICE' | translate"
-              (point1Change)="_onPoint1Changed($event)"
-              (point2Change)="_onPoint2Changed($event)"
-              >
-  </app-range-input>
-  <button (click)="applyRange()">{{ 'APPLY_RANGE' | translate }}</button>
+    <app-range-input
+      [Point1]="1"
+      [Point2]="1000"
+      [min]="1"
+      [max]="1000"
+      [Range_Title]="'RANGE_OF_PRICE' | translate"
+      (point1Change)="_onPoint1Changed($event)"
+      (point2Change)="_onPoint2Changed($event)">
+    </app-range-input>
+    <button (click)="applyRange()">{{ 'APPLY_RANGE' | translate }}</button>
+  </div>
+</ng-template>
 
-</div>
+
+
 
 <div class="categories mb-3 d-flex flex-wrap gap-2">
   <label class="d-block w-100">{{ ('CATEGORIES.' + 'CATEGORIES') | translate }}</label>
