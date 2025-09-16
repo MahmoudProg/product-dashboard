@@ -99,3 +99,17 @@ Several optimizations are applied to ensure smooth performance:
 
 ### i18n Flow & HTTP Caching
 You can see the ASCII diagram for i18n, HTTP Caching in [i18n.txt](./i18n.txt)
+
+
+### Performance Optimizations
+
+This project includes several performance optimizations to ensure smooth and efficient user experience:
+
+- **Change Detection Strategy**: Components use Angular’s `OnPush` strategy to minimize unnecessary re-renders, improving rendering performance.  
+- **TrackBy in *ngFor***: All repeated elements use `trackBy` functions to avoid re-rendering the entire list when only some items change.  
+- **Lazy Loading Modules**: Feature modules are loaded lazily, reducing initial bundle size and improving startup time.  
+- **HTTP Caching**: API responses are cached in services (e.g., `ProductService`) to prevent redundant HTTP calls and reduce network load.  
+- **Optimized Observables**: RxJS streams are optimized with operators like `debounceTime` and `distinctUntilChanged` to reduce unnecessary state updates during user interactions.  
+- **Skeleton Loaders**: Loading states are handled with lightweight skeleton components to enhance perceived performance while data is fetched.  
+
+These strategies collectively enhance responsiveness, reduce memory consumption, and provide a smoother user experience across the application.
