@@ -4,6 +4,8 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 ## Overview
 This is an Angular-based Product Dashboard application that allows users to browse products, filter and sort them, manage favorites, and handle a shopping cart. The project is built with NgRx for state management, supports i18n (internationalization), and includes performance optimizations.
 
+![App Screenshot](src/assets/images/image.png)
+
 ### Live Demo
 
 A live demo of the Product Dashboard is available. The project has been built using Angular's production build (`ng build`) and deployed via GitHub Pages.  
